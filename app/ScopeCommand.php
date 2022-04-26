@@ -24,7 +24,7 @@ class ScopeCommand extends Command {
 			'Yellow',
 		);
 
-	protected static $defaultName = 'scope:update';
+	protected static $defaultName = 'phpstorm:scopes:sync';
 
 	protected function configure(): void {
 		$this->addArgument( 'path', InputArgument::OPTIONAL, 'where is the project located? Optional' );
