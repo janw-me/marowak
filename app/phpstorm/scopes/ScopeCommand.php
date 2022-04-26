@@ -1,6 +1,6 @@
 <?php
 
-namespace Marowak;
+namespace Marowak\Phpstorm\Scopes;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @package Marowak
  */
-class ScopeCommand extends Command {
+class SyncCommand extends Command {
 
 	protected $scope_colors
 		= array(
@@ -45,24 +45,11 @@ class ScopeCommand extends Command {
 		$scopes = $this->getScopes( $path );
 		$colors = $this->getFileColors( $path );
 
-//		$dirs = array( 'mauw'      => '/asdf/',
-//		               'spider'    => '/asdf/spider',
-//		               'tim'       => '/asdf/',
-//		               'twan-huis' => '/asdf/',
-//		               'npo'       => '/asdf/',
-//		               'npo1'      => '/asdf/',
-//		               'npo2'      => '/asdf/',
-//		               'npo3'      => '/asdf/',
-//		               'college'   => '/asdf/',
-//		);
-
 		$this->mergeAll( $dirs, $scopes, $colors );
 
+		var_dump( $colors );
+		
 		$this->updateXML( $path, $scopes, $colors );
-
-
-		var_dump( $dirs, $scopes, $colors );
-
 
 		return Command::SUCCESS;
 	}
@@ -169,7 +156,10 @@ class ScopeCommand extends Command {
 			if ( ! isset( $scopes[ $slug ] ) ) {
 				$scopes[ $slug ] = "file:{$dir}/*";
 			}
-			$colors[ $slug ] = $this->scope_colors[ $i % count( $this->scope_colors ) ];
+			if ( ! isset($colors[$slug])) {
+				var_dump( $colors );
+				$colors[ $slug ] = $this->scope_colors[ $i % count( $this->scope_colors ) ];
+			}
 			$i ++;
 		}
 	}
@@ -180,10 +170,17 @@ class ScopeCommand extends Command {
 		/** @var \SimpleXMLElement $scopes_xml */
 		$scopes_xml = $simple_xml->xpath( 'component[@name="NamedScopeManager"]' );
 
-		unset($scopes_xml[0]->scope);
+		if ( empty( $scopes_xml[0] ) ) {
+			$scopes_xml = $simple_xml->addChild('component');
+			$scopes_xml->addAttribute('name', 'NamedScopeManager');
+		} else {
+			unset($scopes_xml[0]->scope);
+			$scopes_xml = $scopes_xml[0];
+		}
+
 
 		foreach ( $scopes as $slug => $scope ) {
-			$scope_child = $scopes_xml[0]->addChild( 'scope' );
+			$scope_child = $scopes_xml->addChild( 'scope' );
 			$scope_child->addAttribute( 'name', $slug );
 			$scope_child->addAttribute( 'pattern', $scope );
 		}
@@ -191,8 +188,14 @@ class ScopeCommand extends Command {
 		/** @var \SimpleXMLElement $scopes_xml */
 		$colors_xml = $simple_xml->xpath( 'component[@name="FileColors"]' );
 
-		unset($colors_xml[0]->fileColor);
-		
+		if ( empty( $colors_xml[0] ) ) {
+			$colors_xml = $simple_xml->addChild('component');
+			$colors_xml->addAttribute('name', 'FileColors');
+		} else {
+			unset($colors_xml[0]->fileColor);
+			$colors_xml = $colors_xml[0];
+		}
+
 		foreach ( $colors as $slug => $scope ) {
 			$colors_child = $colors_xml[0]->addChild( 'fileColor' );
 			$colors_child->addAttribute( 'scope', $slug );
