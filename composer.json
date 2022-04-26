@@ -1,0 +1,6 @@
+{
+  "require": {
+    "symfony/console": "^5.4",
+    "ext-simplexml": "*"
+  }
+}

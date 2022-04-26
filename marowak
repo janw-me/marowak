@@ -1,0 +1,15 @@
+#!/usr/bin/env php
+<?php
+
+require_once __DIR__.'/vendor/autoload.php';
+require_once __DIR__ .'/app/ScopeCommand.php';
+
+use Symfony\Component\Console\Application;
+
+$application = new Application();
+
+$application->addCommands(array(
+	new \Marowak\ScopeCommand(),
+));
+
+$application->run();
