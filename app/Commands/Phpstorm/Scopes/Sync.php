@@ -2,11 +2,12 @@
 
 namespace Marowak\Commands\Phpstorm\Scopes;
 
+use Marowak\Commands;
 use Marowak\Helper\Paths;
 use Marowak\Helper\XML;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -14,36 +15,31 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @package Marowak
  */
-class Sync extends Command {
+class Sync extends Commands {
 
 	protected $scope_colors = array( 'Blue', 'Green', 'Orange', 'Pink', 'Violet', 'Yellow' );
 
 	protected static $defaultName = 'phpstorm:scopes:sync';
 
 	protected function configure(): void {
-		$this->addArgument( 'path', InputArgument::OPTIONAL, 'where is the project located? Optional' );
+		$this->addOption( 'path', null,InputOption::VALUE_OPTIONAL, 'Where is the project located?' );
 	}
 
 	protected function execute( InputInterface $input, OutputInterface $output ): int {
 
-		$path = $input->getArgument( 'path' );
-		$path = Paths::getIdea( $path );
+		parent::execute($input, $output);
 
-		if ( is_a( $path, '\Exception' ) ) {
-			$output->write( "<error>{$path->getMessage()}</error>\n" );
+		$idea_root = Paths::getIdea( $input->getOption( 'path' ) );
 
-			return Command::FAILURE;
-		}
-
-		$dirs   = XML::getVersionControlDirectories( $path );
-		$scopes = XML::getScopeDirectories( $path );
-		$colors = XML::getFileColors( $path );
+		$dirs   = XML::getVersionControlDirectories( $idea_root );
+		$scopes = XML::getScopeDirectories( $idea_root );
+		$colors = XML::getFileColors( $idea_root );
 
 		$this->mergeAll( $dirs, $scopes, $colors );
 
 		var_dump( $colors );
 
-		$this->updateXML( $path, $scopes, $colors );
+		$this->updateXML( $idea_root, $scopes, $colors );
 
 		return Command::SUCCESS;
 	}

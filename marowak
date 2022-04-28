@@ -9,6 +9,7 @@ $application = new Application();
 
 $application->addCommands( array(
 	new \Marowak\Commands\Phpstorm\Scopes\Sync(),
+	new \Marowak\Commands\LocalWp\Setup\WP_Cli(),
 ) );
 
 $application->run();
