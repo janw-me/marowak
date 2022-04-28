@@ -2,5 +2,10 @@
   "require": {
     "symfony/console": "^5.4",
     "ext-simplexml": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Marowak\\": "app/"
+    }
   }
 }

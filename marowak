@@ -2,11 +2,6 @@
 <?php
 
 require_once __DIR__ . '/vendor/autoload.php';
-// Commands.
-require_once __DIR__ . '/app/commands/phpstorm/scopes/Sync.php';
-// Helpers.
-require_once __DIR__ . '/app/helper/Paths.php';
-require_once __DIR__ . '/app/helper/XML.php';
 
 use Symfony\Component\Console\Application;
 
