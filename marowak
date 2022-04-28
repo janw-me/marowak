@@ -2,14 +2,18 @@
 <?php
 
 require_once __DIR__ . '/vendor/autoload.php';
-require_once __DIR__ . '/app/phpstorm/scopes/ScopeCommand.php';
+// Commands.
+require_once __DIR__ . '/app/commands/phpstorm/scopes/Sync.php';
+// Helpers.
+require_once __DIR__ . '/app/helper/Paths.php';
+require_once __DIR__ . '/app/helper/XML.php';
 
 use Symfony\Component\Console\Application;
 
 $application = new Application();
 
 $application->addCommands( array(
-	new \Marowak\Phpstorm\Scopes\SyncCommand(),
+	new \Marowak\Commands\Phpstorm\Scopes\Sync(),
 ) );
 
 $application->run();
