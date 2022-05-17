@@ -31,9 +31,10 @@ class Sync extends Commands {
 
 		if ( $output->isVerbose() ) {
 			$maxlen = max( array_map( 'strlen', $dirs ) );
+			$output->writeln( "Setting the following scopes:" );
 			foreach ( $colors as $slug => $color ) {
 				$path = str_pad( $dirs[ $slug ], $maxlen + 2 );
-				$output->writeln( "<info>{$path}</info> => <comment>{$color}</comment>" );
+				$output->writeln( " <info>{$path}</info> => <comment>{$color}</comment>" );
 			}
 		}
 

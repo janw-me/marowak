@@ -36,7 +36,11 @@ class WordPress extends Commands {
 			return Command::SUCCESS;
 		}
 
-		$this->updateXML($this->getIdeaRoot(), Paths::getWpDir() );
+		$wp_dir = Paths::getWpDir();
+		if ($output->isVerbose()) {
+			$output->writeln("Setting WordPress directory to <info>{$wp_dir}</info>");
+		}
+		$this->updateXML($this->getIdeaRoot(), $wp_dir );
 
 		return Command::SUCCESS;
 	}
@@ -61,8 +65,6 @@ class WordPress extends Commands {
 		$wp_component->addChild('wordpressPath', $wp_path);
 
 		$simple_xml->saveXML( "$path/workspace.xml" );
-
-		var_dump( $wp_path, $wp_component );
 	}
 
 }

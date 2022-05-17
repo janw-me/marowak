@@ -11,6 +11,7 @@ $application->addCommands( array(
 	new \Marowak\Commands\Phpstorm\Scopes\Sync(),
 	new \Marowak\Commands\LocalWp\Setup\WP_Cli(),
 	new \Marowak\Commands\Phpstorm\WordPress(),
+	new \Marowak\Commands\Phpstorm(),
 ) );
 
 $application->run();
