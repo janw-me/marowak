@@ -22,12 +22,12 @@ class Sync extends Commands {
 	protected static $defaultName = 'phpstorm:scopes:sync';
 
 	protected function configure(): void {
-		$this->addOption( 'path', null,InputOption::VALUE_OPTIONAL, 'Where is the project located?' );
+		$this->addOption( 'path', null, InputOption::VALUE_OPTIONAL, 'Where is the project located?' );
 	}
 
 	protected function execute( InputInterface $input, OutputInterface $output ): int {
 
-		parent::execute($input, $output);
+		parent::execute( $input, $output );
 
 		$idea_root = Paths::getIdea( $input->getOption( 'path' ) );
 
@@ -37,7 +37,13 @@ class Sync extends Commands {
 
 		$this->mergeAll( $dirs, $scopes, $colors );
 
-		var_dump( $colors );
+		if ( $output->isVerbose() ) {
+			$maxlen = max( array_map( 'strlen', $dirs ) );
+			foreach ( $colors as $slug => $color ) {
+				$path = str_pad( $dirs[ $slug ], $maxlen+2 );
+				$output->writeln( "<info>{$path}</info> => <comment>{$color}</comment>" );
+			}
+		}
 
 		$this->updateXML( $idea_root, $scopes, $colors );
 
@@ -50,10 +56,7 @@ class Sync extends Commands {
 			if ( ! isset( $scopes[ $slug ] ) ) {
 				$scopes[ $slug ] = "file:{$dir}/*";
 			}
-			if ( ! isset( $colors[ $slug ] ) ) {
-				var_dump( $colors );
-				$colors[ $slug ] = $this->scope_colors[ $i % count( $this->scope_colors ) ];
-			}
+			$colors[ $slug ] = $this->scope_colors[ $i % count( $this->scope_colors ) ];
 			$i ++;
 		}
 	}
