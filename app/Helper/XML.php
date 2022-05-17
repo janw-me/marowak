@@ -116,4 +116,17 @@ class XML {
 		return $scope_names;
 	}
 
+	public static function getWordPressDirectory( string $path ) {
+		$path       = Paths::getIdea( $path );
+		$simple_xml = self::getSimpleXml( "$path/workspace.xml" );
+
+		$wordpress_dir = $simple_xml->xpath( 'component[@name="WordPressConfiguration"]' );
+
+		if ( empty( $wordpress_dir ) ) {
+			return false;
+		}
+		
+		return (string) $wordpress_dir[0]->wordpressPath;
+
+	}
 }

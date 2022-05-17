@@ -19,14 +19,12 @@ use Symfony\Component\Console\Question\Question;
  */
 class WP_Cli extends Commands {
 
-	protected $project_root;
-
 	protected $yml = array();
 
 	protected static $defaultName = 'localwp:setup:wpcli';
 
 	protected function configure(): void {
-		$this->addOption( 'path', null, InputOption::VALUE_OPTIONAL, 'Where is the project located?' );
+		parent::configure();
 		$this->addOption( 'live-ssh', null, InputOption::VALUE_OPTIONAL, 'The live ssh for wp-cli.yml' );
 		$this->addOption( 'live-path', null, InputOption::VALUE_OPTIONAL, 'The live path for wp-cli.yml' );
 		$this->addOption( 'live-url', null, InputOption::VALUE_OPTIONAL, 'The live url for wp-cli.yml' );
@@ -34,18 +32,17 @@ class WP_Cli extends Commands {
 
 	protected function execute( InputInterface $input, OutputInterface $output ): int {
 
-		parent::execute($input, $output);
+		parent::execute( $input, $output );
 
-		$this->project_root = Paths::getProjectRoot( $input->getOption( 'path' ) );
-		$live_ssh           = $this->optionAskIfMissing( 'live-ssh' );
-		$live_path          = $this->optionAskIfMissing( 'live-path' );
-		$live_url           = $this->optionAskIfMissing( 'live-url' );
+		$live_ssh  = $this->optionAskIfMissing( 'live-ssh' );
+		$live_path = $this->optionAskIfMissing( 'live-path' );
+		$live_url  = $this->optionAskIfMissing( 'live-url' );
 
-		$local_path = str_replace( $this->project_root, '', Paths::getWpDir( $this->project_root ) );
-		$local_url  = URL::getLocalUrl( $this->project_root );
+		$local_path = str_replace( $this->getProjectRoot(), '', Paths::getWpDir( $this->getProjectRoot() ) );
+		$local_url  = URL::getLocalUrl( $this->getProjectRoot() );
 
 		// create wp-cli.yml
-		$yml = new WP_CLI_yml( $this->project_root );
+		$yml = new WP_CLI_yml( $this->getProjectRoot() );
 		$yml->setVar( 'ssh', $live_ssh, '@live' );
 		$yml->setVar( 'path', $live_path, '@live' );
 		$yml->setVar( 'url', $live_url, '@live' );
@@ -80,8 +77,9 @@ class WP_Cli extends Commands {
 
 		$answer = $helper->ask( $this->input, $this->output, $question );
 		if ( empty( $answer ) ) {
-			$answer = $this->optionAskIfMissing($option_name);
+			$answer = $this->optionAskIfMissing( $option_name );
 		}
+
 		return $answer;
 	}
 }

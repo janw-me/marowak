@@ -3,11 +3,9 @@
 namespace Marowak\Commands\Phpstorm\Scopes;
 
 use Marowak\Commands;
-use Marowak\Helper\Paths;
 use Marowak\Helper\XML;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -21,31 +19,25 @@ class Sync extends Commands {
 
 	protected static $defaultName = 'phpstorm:scopes:sync';
 
-	protected function configure(): void {
-		$this->addOption( 'path', null, InputOption::VALUE_OPTIONAL, 'Where is the project located?' );
-	}
-
 	protected function execute( InputInterface $input, OutputInterface $output ): int {
 
 		parent::execute( $input, $output );
 
-		$idea_root = Paths::getIdea( $input->getOption( 'path' ) );
-
-		$dirs   = XML::getVersionControlDirectories( $idea_root );
-		$scopes = XML::getScopeDirectories( $idea_root );
-		$colors = XML::getFileColors( $idea_root );
+		$dirs   = XML::getVersionControlDirectories( $this->getIdeaRoot() );
+		$scopes = XML::getScopeDirectories( $this->getIdeaRoot() );
+		$colors = XML::getFileColors( $this->getIdeaRoot() );
 
 		$this->mergeAll( $dirs, $scopes, $colors );
 
 		if ( $output->isVerbose() ) {
 			$maxlen = max( array_map( 'strlen', $dirs ) );
 			foreach ( $colors as $slug => $color ) {
-				$path = str_pad( $dirs[ $slug ], $maxlen+2 );
+				$path = str_pad( $dirs[ $slug ], $maxlen + 2 );
 				$output->writeln( "<info>{$path}</info> => <comment>{$color}</comment>" );
 			}
 		}
 
-		$this->updateXML( $idea_root, $scopes, $colors );
+		$this->updateXML( $this->getIdeaRoot(), $scopes, $colors );
 
 		return Command::SUCCESS;
 	}
@@ -61,7 +53,7 @@ class Sync extends Commands {
 		}
 	}
 
-	protected function updateXML( string $path, array $scopes, array $colors ) {
+	protected function updateXML( string $path, array $scopes, array $colors ): void {
 		$simple_xml = XML::getSimpleXml( "$path/workspace.xml" );
 
 		/** @var \SimpleXMLElement $scopes_xml */

@@ -1,12 +1,18 @@
 {
-  "require": {
-    "symfony/console": "^5.4",
-    "ext-simplexml": "*",
-    "wp-cli/mustangostang-spyc": "^0.6.3"
-  },
   "autoload": {
     "psr-4": {
       "Marowak\\": "app/"
+    }
+  },
+  "require": {
+    "symfony/console": "^5.4",
+    "ext-simplexml": "*",
+    "wp-cli/mustangostang-spyc": "^0.6.3",
+    "php": "^7.4"
+  },
+  "config": {
+    "platform": {
+      "php": "7.4"
     }
   }
 }
