@@ -52,7 +52,7 @@ class WordPress extends Commands {
 		$wp_component = $simple_xml->xpath( 'component[@name="WordPressConfiguration"]' );
 		if ( empty( $wp_component[0] ) ) {
 			$wp_component = $simple_xml->addChild( 'component' );
-			$wp_component->addAttribute( 'name', 'NamedScopeManager' );
+			$wp_component->addAttribute( 'name', 'WordPressConfiguration' );
 		} else {
 			unset( $wp_component[0]->wordpressPath );
 			$wp_component = $wp_component[0];
@@ -63,6 +63,7 @@ class WordPress extends Commands {
 
 
 		$wp_component->addChild('wordpressPath', $wp_path);
+		$wp_component->addAttribute( 'enabled', 'true' );
 
 		$simple_xml->saveXML( "$path/workspace.xml" );
 	}
