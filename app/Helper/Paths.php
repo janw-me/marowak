@@ -70,6 +70,18 @@ class Paths {
 		if ( file_exists( "{$project_root}app/public_html/wp/wp-load.php" ) ) {
 			return "{$project_root}app/public_html/wp/";
 		}
+		if ( file_exists( "{$project_root}public/wp-load.php" ) ) {
+			return "{$project_root}public/";
+		}
+		if ( file_exists( "{$project_root}public/wp/wp-load.php" ) ) {
+			return "{$project_root}public/wp/";
+		}
+		if ( file_exists( "{$project_root}public_html/wp-load.php" ) ) {
+			return "{$project_root}public_html/";
+		}
+		if ( file_exists( "{$project_root}public_html/wp/wp-load.php" ) ) {
+			return "{$project_root}public_html/wp/";
+		}
 
 		throw new \Exception( 'Can\'t find a WordPress folder.' );
 	}
