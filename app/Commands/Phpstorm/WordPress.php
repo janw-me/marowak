@@ -61,9 +61,10 @@ class WordPress extends Commands {
 		// cleanup WP_Path
 		$wp_path = rtrim( str_replace($this->getProjectRoot(),'$PROJECT_DIR$/', $wp_path), '/' );
 
-
 		$wp_component->addChild('wordpressPath', $wp_path);
-		$wp_component->addAttribute( 'enabled', 'true' );
+		if ( empty( $wp_component->attributes()->enabled ) || 'true' !== (string) $wp_component->attributes()->enabled ) {
+			$wp_component->addAttribute( 'enabled', 'true' );
+		}
 
 		$simple_xml->saveXML( "$path/workspace.xml" );
 	}
