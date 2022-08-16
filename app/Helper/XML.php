@@ -82,6 +82,10 @@ class XML {
 			$scope_names[ (string) $scope['name'] ] = (string) $scope['pattern'];
 		}
 
+		if ( empty( $scope_names['mu-plugins'] ) ) {
+			$scope_names['mu-plugins'] = 'file[base]:public_html/content/mu-plugins//*';
+		}
+
 		return $scope_names;
 	}
 
@@ -113,6 +117,10 @@ class XML {
 			$scope_names[ (string) $scope['scope'] ] = (string) $scope['color'];
 		}
 
+		if ( empty( $scope_names['mu-plugins'] ) ) {
+			$scope_names['mu-plugins'] = '292929';
+		}
+
 		return $scope_names;
 	}
 
@@ -125,7 +133,7 @@ class XML {
 		if ( empty( $wordpress_dir ) ) {
 			return false;
 		}
-		
+
 		return (string) $wordpress_dir[0]->wordpressPath;
 
 	}
